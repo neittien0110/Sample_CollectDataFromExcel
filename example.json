@@ -1,0 +1,12 @@
+{
+    "sheets": [
+        {
+            "name": "Cử nhân",
+            "cells": [
+                { "name": "Semester", "location": "F6" },
+                { "name": "FullName", "location": "C9" },
+                { "name": "StudentID", "location": "MSSV"}
+            ]
+        }
+    ]
+}
