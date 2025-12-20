@@ -233,44 +233,33 @@ def extract_excel_data(excel_path: str, spec_data: Dict[str, Any], output_media_
 # --- HÀM CHÍNH ---
 
 def main():
-    parser = argparse.ArgumentParser(description="Trích xuất dữ liệu và hình ảnh từ file Excel theo đặc tả JSON.", 
-                                     formatter_class=argparse.RawTextHelpFormatter)
-    
-    # Tham số --document (-d) BẮT BUỘC
+    parser = argparse.ArgumentParser(description="Trích xuất dữ liệu Excel.")
     parser.add_argument('--document', '-d', type=str, required=True, help='Tên file Excel nguồn dữ liệu (ví dụ: abc.xlsx).')
     
     # Tham số --json (-j) TÙY CHỌN, có MẶC ĐỊNH
     parser.add_argument('--json', '-j', type=str, default=None, 
                         help='Tên file JSON đặc tả cấu trúc. Mặc định: [tên document].json.')
-    
+
+    parser.add_argument('--output', '-o', type=str, default=None, help='File JSON đầu ra. Nếu trống sẽ in ra màn hình.')
+   
     # Tham số --verbose (-v) CỜ BOOLEAN
     parser.add_argument('--verbose', '-v', action='store_true', default=False, 
                         help='Giải thích chi tiết từng bước hoạt động.')
     
     args = parser.parse_args()
     
-    # --- 1. Thiết lập Đường dẫn và Kiểm tra ---
-    doc_path = args.document
-    verbose = args.verbose
-    
-    if not os.path.exists(doc_path):
-        print(f"LỖI: File document không tồn tại tại đường dẫn: {doc_path}")
+    # 1. Kiểm tra file đầu vào
+    if not os.path.exists(args.document):
         sys.exit(1)
 
-    doc_dir, doc_name_no_ext, _ = get_file_components(doc_path)
+    doc_dir, doc_name_no_ext, _ = get_file_components(args.document)
     json_path = args.json if args.json else os.path.join(doc_dir, f"{doc_name_no_ext}.json")
     
     if not os.path.exists(json_path):
-        print(f"LỖI: File JSON đặc tả không tồn tại tại đường dẫn: {json_path}")
         sys.exit(1)
         
-    output_json_path = os.path.join(doc_dir, "output.json")
     output_media_dir = os.path.join(doc_dir, f"{doc_name_no_ext}_media")
     os.makedirs(output_media_dir, exist_ok=True) 
-
-    if verbose:
-        print(f"--- Bắt đầu Xử lý File Excel ---")
-        print(f"  [Document]: {doc_path}")
 
     # --- 2. Đọc Đặc tả JSON và Trích xuất ---
     try:
@@ -280,16 +269,22 @@ def main():
         print(f"LỖI: Không thể đọc hoặc phân tích file JSON đặc tả: {e}")
         sys.exit(1)
         
-    final_results = extract_excel_data(doc_path, spec_data, output_media_dir, doc_name_no_ext, verbose)
+    final_results = extract_excel_data(args.document, spec_data, output_media_dir, doc_name_no_ext, args.verbose)
     
-    # --- 3. Lưu Kết quả ra file output.json ---
-    try:
-        with open(output_json_path, 'w', encoding='utf-8') as f:
-            json.dump(final_results, f, indent=4, ensure_ascii=False)
-        print(f"\nTHÀNH CÔNG: Đã lưu kết quả trích xuất vào file: {output_json_path}")
-        
-    except Exception as e:
-        print(f"LỖI: Không thể lưu kết quả vào output.json: {e}")
+    # 3. Xuất kết quả
+    json_output = json.dumps(final_results, indent=4, ensure_ascii=False)
+    
+    if args.output:
+        try:
+            with open(args.output, 'w', encoding='utf-8') as f:
+                f.write(json_output)
+            if args.verbose:
+                print(f"THÀNH CÔNG: Đã lưu vào {args.output}")
+        except Exception as e:
+            sys.stderr.write(f"LỖI: {str(e)}\n")
+    else:
+        # CHỈ in nội dung JSON, không in gì khác
+        sys.stdout.write(json_output + "\n")
 
 if __name__ == "__main__":
     main()

@@ -10,6 +10,7 @@ Viêt chương trình python để lấy nội dung trong file excel và ghi ra 
 - Vị trí các cell cần đọc được mô tả trong file --json, định vị theo chỉ số cột-dòng dạng A3, B5, và đồng thời cho phép định vị theo Range Name.
 - Chỉ định chính xác cả tên sheet, theo cấu trúc lồng "sheets": [{"Sheet 1", "cells": [ ]}]
 - Các tham số dòng lệnh dài có tham số ngắn kèm theo.
+- Xuất nội dung phân tích được ra màn hình hoặc ra file
 - Thêm tham số dòng lệnh --verbose.
 
 ## Cấu trúc File Đặc tả JSON Bắt buộc
@@ -42,7 +43,7 @@ Cú pháp:
 
 ```shell
 python .\CollectDataFromExcel.py -h         
-usage: CollectDataFromExcel.py [-h] --document DOCUMENT [--json JSON] [--verbose]
+usage: CollectDataFromExcel.py [-h] --document DOCUMENT [--json JSON] [--output OUTPUT] [--verbose]
 
 Chương trình xử lý file dữ liệu và đặc tả cấu trúc.
 
@@ -52,6 +53,7 @@ options:
                         Tên file nguồn dữ liệu đầu vào. (Ví dụ: abc.xlsx)
   --json, -j JSON       Tên file JSON đặc tả cấu trúc.
                         Nếu không có, mặc định lấy theo tên file --document (Ví dụ: abc.json).
+  --output, -o OUTPUT   File JSON đầu ra. Nếu trống sẽ in ra màn hình.
   --verbose, -v         Giải thích chi tiết từng bước hoạt động của chương trình.
 ```
 
@@ -59,5 +61,5 @@ Ví dụ:
 
 ```shell
 python .\CollectDataFromExcel.py --document example.xlsx
-python .\CollectDataFromExcel.py -d example.xlsx -j example.json -v
+python .\CollectDataFromExcel.py -d example.xlsx -j example.json -o output.json -v
 ```
