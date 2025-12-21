@@ -1,0 +1,19 @@
+{
+    "sheets": [
+        {
+            "name": "Sbus",
+            "table": {
+                "Range": "B2:G7",
+                "MappingFields": ["id", "station", "Ten", "P_key", "Trungtam", "Quan_Ly"]
+            }
+        },
+        {
+            "name": "Branch",
+            "table": {
+                "Range": "TableSCADA2",
+                "MappingFields": ["id", "station", "feeder", "P_key", "Q_key", "Trungtam", "Quan_Ly"]
+            }
+        }
+
+    ]
+}
