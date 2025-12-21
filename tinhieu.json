@@ -10,7 +10,7 @@
         {
             "name": "Branch",
             "table": {
-                "Range": "TableSCADA2",
+                "RangeName": "TableSCADA2",
                 "MappingFields": ["id", "station", "feeder", "P_key", "Q_key", "Trungtam", "Quan_Ly"]
             }
         }
